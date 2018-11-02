@@ -43,7 +43,7 @@ public class CrimeFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                mCrime.setmTitle(charSequence.toString());
+                mCrime.setTitle(charSequence.toString());
             }
 
             @Override
@@ -53,14 +53,14 @@ public class CrimeFragment extends Fragment {
         });
 
         mDateButton = v.findViewById(R.id.crimeDate);
-        mDateButton.setText(mCrime.getmDate().toString());
+        mDateButton.setText(mCrime.getDate().toString());
         mDateButton.setEnabled(false);
 
         mSolvedCheckbox = v.findViewById(R.id.crimeSolved);
         mSolvedCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                mCrime.setmSolved(b);
+                mCrime.setSolved(b);
             }
         });
         return v;
