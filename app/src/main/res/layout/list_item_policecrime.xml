@@ -11,10 +11,17 @@
         android:layout_height="wrap_content"
         android:text="title"/>
 
+
     <TextView
         android:id="@+id/crime_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="date"/>
+
+    <Button
+        android:id="@+id/callpolice"
+        android:text="@string/callpolice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>
