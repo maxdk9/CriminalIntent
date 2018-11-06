@@ -14,7 +14,11 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 
+import java.util.UUID;
+
 public class CrimeFragment extends Fragment {
+
+    public static final String CRIME_ID = "crime_id";
     Crime mCrime;
     private EditText mEditText;
     private Button mDateButton;
@@ -22,10 +26,23 @@ public class CrimeFragment extends Fragment {
 
 
 
+    public static CrimeFragment getInstance(UUID crimeuuid) {
+        Bundle args = new Bundle();
+        args.putSerializable(CRIME_ID, crimeuuid);
+        CrimeFragment result = new CrimeFragment();
+        result.setArguments(args);
+        return result;
+
+    }
+
+
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mCrime = new Crime();
+        UUID crimeId = (UUID) getArguments().getSerializable(CRIME_ID);
+        mCrime = CrimeLab.getInstance(getActivity()).GetCrime(crimeId);
+
     }
 
     @Nullable
@@ -34,6 +51,7 @@ public class CrimeFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_crime, container,false);
         mEditText = v.findViewById(R.id.crimeTitle);
+        mEditText.setText(mCrime.getTitle());
         mEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -44,6 +62,8 @@ public class CrimeFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 mCrime.setTitle(charSequence.toString());
+                CrimeLab.getInstance(getActivity()).AddChanged(mCrime.getUid());
+
             }
 
             @Override
@@ -57,6 +77,7 @@ public class CrimeFragment extends Fragment {
         mDateButton.setEnabled(false);
 
         mSolvedCheckbox = v.findViewById(R.id.crimeSolved);
+        mSolvedCheckbox.setChecked(mCrime.isSolved());
         mSolvedCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {

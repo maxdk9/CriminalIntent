@@ -1,5 +1,7 @@
 package criminalintent.and.mazzy.criminalintent;
 
+import android.text.format.DateFormat;
+
 import java.util.Date;
 import java.util.UUID;
 
@@ -9,6 +11,11 @@ public class Crime {
     private Date mDate;
     private boolean mSolved;
     private boolean mRequiredPolice;
+
+
+
+    private static String dateFormatString="EEEE, MMM d, yyyy";//Friday, Jul 22, 2016
+
 
     public String getTitle() {
         return mTitle;
@@ -52,4 +59,13 @@ public class Crime {
     public void setRequiredPolice(boolean requiredPolice) {
         this.mRequiredPolice = requiredPolice;
     }
+
+    public String getDateString() {
+        String res=android.text.format.DateFormat.format(dateFormatString, this.getDate()).toString();
+
+
+        return res;
+    }
+
+
 }

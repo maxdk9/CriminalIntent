@@ -9,6 +9,7 @@ import java.util.UUID;
 class CrimeLab {
     private static  CrimeLab ourInstance ;
     private List<Crime> mCrimes;
+    private List <UUID> changed=new ArrayList<UUID>();
 
 
     static CrimeLab getInstance(Context context) {
@@ -29,13 +30,10 @@ class CrimeLab {
 
     private void GeterateTestCrimes() {
         for (int i = 0; i < 100; i++) {
-
-
             Crime crime = new Crime();
             crime.setTitle("Crime #" + i);
             crime.setSolved(i % 2 == 0); // Для каждого второго объекта
             crime.setRequiredPolice(i%10==0);
-
             mCrimes.add(crime);
         }
     }
@@ -55,4 +53,14 @@ class CrimeLab {
     }
 
 
+    public void AddChanged(UUID uid) {
+        if (changed.contains(uid)) {
+            return;
+        }
+        changed.add(uid);
+    }
+
+    public List<UUID> getChanged() {
+        return changed;
+    }
 }
