@@ -10,5 +10,6 @@ public class CrimeListActivity extends SingleFragmentActivity {
     protected Fragment createFragment() {
         Fragment fragment = new CrimeListFragment();
         return fragment;
+
     }
 }

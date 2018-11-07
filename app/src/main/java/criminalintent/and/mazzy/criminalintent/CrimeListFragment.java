@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import criminalintent.and.mazzy.criminalintent.page.CrimePageActivity;
+
 public class CrimeListFragment extends Fragment {
     private final int POSITION_TAG=1001;
 
@@ -30,14 +32,7 @@ public class CrimeListFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        /*View view = inflater.inflate(R.layout.fragment_crime_list, container, false);
-        mRecyclerView = view.findViewById(R.id.);
-
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));*/
-
-
         View view = inflater.inflate(R.layout.fragment_crime_list, container, false);
-
         mCrimeRecycleView = (RecyclerView) view.findViewById(R.id.crime_recycler_listview);
         mCrimeRecycleView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
@@ -101,12 +96,10 @@ public class CrimeListFragment extends Fragment {
 
         @Override
         public void onClick(View view) {
-//            String toastMessage = "" + mCrime.getTitle() + " is clicked";
-//            Toast.makeText(getActivity(), toastMessage, Toast.LENGTH_SHORT).show();
-
-
             changedList.add(getAdapterPosition());
-            Intent intent = CrimeActivity.newIntent(getActivity(),mCrime.getUid());
+            //Intent intent = CrimeActivity.newIntent(getActivity(),mCrime.getUid());
+            Intent intent = CrimePageActivity.newIntent(getActivity(), mCrime.getUid());
+
             startActivity(intent);
         }
     }
@@ -135,16 +128,12 @@ public class CrimeListFragment extends Fragment {
         @Override
         public int getItemViewType(int position) {
             Crime crime = mCrimeList.get(position);
-//            if (crime.isRequiredPolice()) {
-//                return R.layout.list_item_policecrime;
-//            }
             return R.layout.list_item_crime;
         }
 
         @Override
         public void onBindViewHolder(@NonNull CrimeHolder holder, int position) {
             Crime crime = mCrimeList.get(position);
-
             holder.bind(crime);
         }
 

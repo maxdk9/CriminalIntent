@@ -6,13 +6,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-class CrimeLab {
+public class CrimeLab {
     private static  CrimeLab ourInstance ;
     private List<Crime> mCrimes;
     private List <UUID> changed=new ArrayList<UUID>();
 
 
-    static CrimeLab getInstance(Context context) {
+    public static CrimeLab getInstance(Context context) {
 
         if (ourInstance == null) {
             ourInstance = new CrimeLab(context);
