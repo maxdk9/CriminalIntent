@@ -117,10 +117,8 @@ public class CrimePageActivity extends AppCompatActivity implements View.OnClick
                 mViewPager.setCurrentItem(mCrimes.size()-1);
                 UpdateUI();
                 break;
-
                 default:
                     break;
-
         }
 
     }
