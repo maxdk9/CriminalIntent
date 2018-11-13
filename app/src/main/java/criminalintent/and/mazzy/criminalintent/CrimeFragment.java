@@ -58,6 +58,7 @@ public class CrimeFragment extends Fragment {
         Bundle args = new Bundle();
         args.putSerializable(CRIME_ID, crimeuuid);
         CrimeFragment result = new CrimeFragment();
+
         result.setArguments(args);
         return result;
 

@@ -22,7 +22,7 @@ import java.util.GregorianCalendar;
 public class DatePickerFragment extends DialogFragment {
 
     private DatePicker mDatePicker;
-    public final static String EXTRA_DATE="criminalintent.and.mazzy.criminalintent";
+    public final static String EXTRA_DATE="criminalintent.and.mazzy.criminalintent.extradate";
 
     @NonNull
     @Override
