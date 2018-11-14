@@ -10,7 +10,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.format.Time;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +22,9 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.UUID;
 
 import criminalintent.and.mazzy.criminalintent.page.CrimePageActivity;
@@ -33,6 +38,11 @@ public class CrimeFragment extends Fragment {
     Crime mCrime;
     private EditText mEditText;
     private Button mDateButton;
+    private Button mTimeButton;
+    private Button mDeleteButton;
+
+
+
     private CheckBox mSolvedCheckbox;
 
     @Override
@@ -46,6 +56,7 @@ public class CrimeFragment extends Fragment {
         mCrime.setDate(date);
 
         update_mDate(date);
+        update_Time(date);
 
 
     }
@@ -117,6 +128,21 @@ public class CrimeFragment extends Fragment {
         });
 
 
+        mTimeButton = v.findViewById(R.id.crimeTime);
+        update_Time(mCrime.getDate());
+        mTimeButton.setEnabled(true);
+
+        mTimeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentManager fragmentManager = getFragmentManager();
+                TimePickerFragment dialog = TimePickerFragment.newInstance(mCrime.getDate());
+                dialog.setTargetFragment(CrimeFragment.this,REQUEST_DATE);
+                dialog.show(fragmentManager,DIALOG_DATE);
+
+            }
+        });
+
 
 
         mSolvedCheckbox = v.findViewById(R.id.crimeSolved);
@@ -127,6 +153,23 @@ public class CrimeFragment extends Fragment {
                 mCrime.setSolved(b);
             }
         });
+
+        mDeleteButton = v.findViewById(R.id.crimeDelete);
+        mDeleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CrimeLab.getInstance(getActivity()).DeleteCrime(mCrime);
+                getActivity().finish();
+            }
+        });
         return v;
+    }
+
+    private void update_Time(Date date) {
+
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH mm", Locale.ENGLISH);
+        String restime = dateFormat.format(date);
+        mTimeButton.setText(restime);
     }
 }

@@ -31,6 +31,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text=""/>
+    <Button
+        android:id="@+id/crimeTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=""/>
+
+    <Button
+        android:id="@+id/crimeDelete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/button_delete"
+        />
     <CheckBox
         android:id="@+id/crimeSolved"
         android:text="@string/crime_solved_label"

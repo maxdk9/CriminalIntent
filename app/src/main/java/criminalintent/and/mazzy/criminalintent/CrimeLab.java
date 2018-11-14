@@ -24,7 +24,7 @@ public class CrimeLab {
     private CrimeLab(Context context) {
 
         mCrimes = new ArrayList<>();
-        GeterateTestCrimes();
+      //  GeterateTestCrimes();
 
     }
 
@@ -52,6 +52,10 @@ public class CrimeLab {
         return mCrimes;
     }
 
+    public void AddCrime(Crime crime) {
+        mCrimes.add(crime);
+    }
+
 
     public void AddChanged(UUID uid) {
         if (changed.contains(uid)) {
@@ -60,7 +64,14 @@ public class CrimeLab {
         changed.add(uid);
     }
 
+
+
+
     public List<UUID> getChanged() {
         return changed;
+    }
+
+    public void DeleteCrime(Crime crime) {
+        mCrimes.remove(crime);
     }
 }
