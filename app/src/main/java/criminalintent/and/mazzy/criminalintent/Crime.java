@@ -11,10 +11,15 @@ public class Crime {
     private Date mDate;
     private boolean mSolved;
     private boolean mRequiredPolice;
+    private String mSuspect;
 
 
 
     private static String dateFormatString="EEEE, MMM d, yyyy";//Friday, Jul 22, 2016
+
+    public Crime(UUID uuid) {
+        this.mUid=uuid;
+    }
 
 
     public String getTitle() {
@@ -68,4 +73,11 @@ public class Crime {
     }
 
 
+    public String getSuspect() {
+        return mSuspect;
+    }
+
+    public void setSuspect(String mSuspect) {
+        this.mSuspect = mSuspect;
+    }
 }

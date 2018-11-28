@@ -16,7 +16,9 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.ViewDebug;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,17 +32,31 @@ public class CrimeListFragment extends Fragment {
     private static final String SAVED_SUBTITLE_VISIBLE = "SAVED_SUBTITLE_VISIBLE";
     private final int POSITION_TAG=1001;
 
+    private View emptyView;
+    private Button addCrime_Button;
     private RecyclerView mCrimeRecycleView;
     private CrimeAdapter mCrimeAdapter;
     private boolean mSubtitleVisible;
     private List<Integer> changedList=new ArrayList<>();
 
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_crime_list, container, false);
+
+
         mCrimeRecycleView = (RecyclerView) view.findViewById(R.id.crime_recycler_listview);
         mCrimeRecycleView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        emptyView = view.findViewById(R.id.emty_view);
+        addCrime_Button = view.findViewById(R.id.emty_view_addcrimebutton);
+        addCrime_Button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AddNewCrime();
+            }
+        });
 
         if (savedInstanceState != null) {
             mSubtitleVisible = savedInstanceState.getBoolean(SAVED_SUBTITLE_VISIBLE);
@@ -90,10 +106,7 @@ public class CrimeListFragment extends Fragment {
 
         switch (item.getItemId()) {
             case R.id.new_crime:
-                Crime crime = new Crime();
-                CrimeLab.getInstance(getActivity()).AddCrime(crime);
-                Intent intent = CrimePageActivity.newIntent(getActivity(), crime.getUid());
-                startActivity(intent);
+                AddNewCrime();
                 return true;
             case R.id.ic_show_subtitle:
                 mSubtitleVisible=!mSubtitleVisible;
@@ -104,6 +117,13 @@ public class CrimeListFragment extends Fragment {
                 return super.onOptionsItemSelected(item);
         }
 
+    }
+
+    private void AddNewCrime() {
+        Crime crime = new Crime();
+        CrimeLab.getInstance(getActivity()).AddCrime(crime);
+        Intent intent = CrimePageActivity.newIntent(getActivity(), crime.getUid());
+        startActivity(intent);
     }
 
     private void updateSubtitle() {
@@ -122,6 +142,17 @@ public class CrimeListFragment extends Fragment {
 
 
     private void UpdateUI() {
+        if (mCrimeAdapter != null) {
+            if (mCrimeAdapter.getItemCount() > 0) {
+                emptyView.setVisibility(View.GONE);
+            }
+            else{
+                emptyView.setVisibility(View.VISIBLE);
+            }
+
+        }
+
+
         CrimeLab crimeLab = CrimeLab.getInstance(getActivity());
         List<Crime> crimes = crimeLab.getCrimes();
         if (mCrimeAdapter == null) {
