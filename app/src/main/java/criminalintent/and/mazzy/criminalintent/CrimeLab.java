@@ -37,6 +37,7 @@ public class CrimeLab {
         res.put(CrimeDbSchema.CrimeTable.Cols.DATE, crime.getDate().getTime());
         res.put(CrimeDbSchema.CrimeTable.Cols.TITLE,crime.getTitle());
         res.put(CrimeDbSchema.CrimeTable.Cols.SUSPECT, crime.getSuspect());
+        res.put(CrimeDbSchema.CrimeTable.Cols.SUSPECTID,crime.getSuspectId());
         return res;
 
     }

@@ -3,6 +3,9 @@ package criminalintent.and.mazzy.criminalintent;
 import android.app.Activity;
 import android.app.Instrumentation;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
@@ -12,6 +15,7 @@ import android.support.v4.app.FragmentManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.Time;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,6 +26,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -48,6 +53,7 @@ public class CrimeFragment extends Fragment {
 
     private Button mSuspectButton;
     private Button mReportButton;
+    private Button mCallSuspectButton;
 
 
 
@@ -62,17 +68,45 @@ public class CrimeFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-       if(resultCode!= Activity.RESULT_OK)
-       {
-           return;
-       }
+        if (resultCode != Activity.RESULT_OK) {
+            return;
+        }
 
-        Date date = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
-        mCrime.setDate(date);
+        if (requestCode == REQUEST_DATE) {
 
-        update_mDate(date);
-        update_Time(date);
+            Date date = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
 
+            mCrime.setDate(date);
+
+            update_mDate(date);
+            update_Time(date);
+        }
+
+        if (requestCode == REQUEST_CONTACT && data != null) {
+            Uri contactUri = data.getData();
+
+            String[] queryFields = new String[]{
+                    ContactsContract.Contacts.DISPLAY_NAME,ContactsContract.Contacts._ID
+            };
+
+            Cursor c = getActivity().getContentResolver()
+                    .query(contactUri, queryFields, null, null, null);
+            try {
+
+                if (c.getCount() == 0) {
+                    return;
+                }
+
+                c.moveToFirst();
+                String suspect = c.getString(0);
+                String suspectid = c.getString(1);
+                mCrime.setSuspect(suspect);
+                mCrime.setSuspectId(suspectid);
+                mSuspectButton.setText(suspect+";id="+suspectid);
+            } finally {
+                c.close();
+            }
+        }
 
     }
 
@@ -138,6 +172,8 @@ public class CrimeFragment extends Fragment {
         mReportButton = v.findViewById(R.id.crime_report);
 
         mDateButton = v.findViewById(R.id.crimeDate);
+        mCallSuspectButton = v.findViewById(R.id.call_suspect);
+
         update_mDate(mCrime.getDate());
         mDateButton.setEnabled(true);
 
@@ -203,18 +239,74 @@ public class CrimeFragment extends Fragment {
 
         final Intent pickContact = new Intent(Intent.ACTION_PICK,
                 ContactsContract.Contacts.CONTENT_URI);
+
+
         mSuspectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.d("OnClickListener","OnClickListener +mSuspectButton");
                 startActivityForResult(pickContact,REQUEST_CONTACT);
             }
         });
+
+
 
         if (mCrime.getSuspect() != null) {
             mSuspectButton.setText(mCrime.getSuspect());
         }
 
+        PackageManager packageManager = getActivity().getPackageManager();
+        if (packageManager.resolveActivity(pickContact,
+                PackageManager.MATCH_DEFAULT_ONLY) == null) {
+            mSuspectButton.setEnabled(false);
+        }
+
+
+
+
+        mCallSuspectButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String phone = getPhoneUsingContactId();
+                Toast.makeText(getActivity(),"Phone:"+phone,Toast.LENGTH_LONG).show();
+            }
+        });
+        if (mCrime.getSuspect() == null) {
+            mCallSuspectButton.setEnabled(false);
+        }
+
         return v;
+    }
+
+    public String getPhoneUsingContactId(){
+
+        String contactId=mCrime.getSuspectId();
+        String cContactIdString = ContactsContract.CommonDataKinds.Phone.CONTACT_ID;
+        Uri cCONTACT_CONTENT_URI = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
+        String cDisplayNameColumn = ContactsContract.CommonDataKinds.Phone.NUMBER;
+
+        String selection = cContactIdString + " = ? ";
+        String[] selectionArgs = new String[]{String.valueOf(contactId)};
+
+        Cursor cursor = getActivity().getContentResolver().query(cCONTACT_CONTENT_URI, null, selection, selectionArgs, null);
+
+
+        String phone = "";
+        if ((cursor != null) && (cursor.getCount() > 0)) {
+            cursor.moveToFirst();
+            while ((cursor != null) && (cursor.isAfterLast() == false)) {
+                if (cursor.getColumnIndex(cContactIdString) >= 0) {
+                    if (contactId.equals(cursor.getString(cursor.getColumnIndex(cContactIdString)))) {
+                       phone = cursor.getString(cursor.getColumnIndex(cDisplayNameColumn));
+                        break;
+                    }
+                }
+                cursor.moveToNext();
+            }
+        }
+        if (cursor != null)
+            cursor.close();
+        return phone;
     }
 
     private void update_Time(Date date) {

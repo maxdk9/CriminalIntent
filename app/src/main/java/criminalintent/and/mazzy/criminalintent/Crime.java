@@ -12,6 +12,7 @@ public class Crime {
     private boolean mSolved;
     private boolean mRequiredPolice;
     private String mSuspect;
+    private String mSuspectId;
 
 
 
@@ -79,5 +80,13 @@ public class Crime {
 
     public void setSuspect(String mSuspect) {
         this.mSuspect = mSuspect;
+    }
+
+    public void setSuspectId(String id) {
+        this.mSuspectId=id;
+    }
+
+    public String getSuspectId() {
+        return this.mSuspectId;
     }
 }
