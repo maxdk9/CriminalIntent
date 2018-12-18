@@ -4,7 +4,9 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.widget.EditText;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -19,6 +21,8 @@ public class CrimeLab {
     private List <UUID> changed=new ArrayList<UUID>();
     private Context mContext;
     private SQLiteDatabase mDatabase;
+
+
 
     public static CrimeLab getInstance(Context context) {
 
@@ -137,5 +141,10 @@ public class CrimeLab {
     public CrimeCursorWrapper queryCrimes(String whereClause, String[] whereArgs) {
         Cursor cursor = mDatabase.query(CrimeDbSchema.NAME, null, whereClause, whereArgs, null, null, null);
         return new CrimeCursorWrapper(cursor);
+    }
+
+    public File GetPhotoFile(Crime mCrime) {
+        File fileDir=mContext.getFilesDir();
+        return new File(fileDir, mCrime.getFileName());
     }
 }

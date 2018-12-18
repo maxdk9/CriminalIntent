@@ -4,14 +4,17 @@ import android.app.Activity;
 import android.app.Instrumentation;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.FileProvider;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.Time;
@@ -26,11 +29,15 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -44,6 +51,7 @@ public class CrimeFragment extends Fragment {
     public static final String DIALOG_DATE = "dialogdate";
     public static final int REQUEST_DATE=0;
     private static final int REQUEST_CONTACT =1 ;
+    private static final int REQUEST_PHOTO = 2;
 
     Crime mCrime;
     private EditText mEditText;
@@ -54,6 +62,13 @@ public class CrimeFragment extends Fragment {
     private Button mSuspectButton;
     private Button mReportButton;
     private Button mCallSuspectButton;
+
+    private ImageView mCrimePhoto;
+    private ImageButton mCameraButton;
+
+
+    private File mPhotoFile;
+    private EditText mFileEditText;
 
 
 
@@ -137,12 +152,17 @@ public class CrimeFragment extends Fragment {
         super.onCreate(savedInstanceState);
         UUID crimeId = (UUID) getArguments().getSerializable(CRIME_ID);
         mCrime = CrimeLab.getInstance(getActivity()).GetCrime(crimeId);
+        mPhotoFile = CrimeLab.getInstance(getActivity()).GetPhotoFile(mCrime);
 
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+
+
+
 
         View v = inflater.inflate(R.layout.fragment_crime, container,false);
         mEditText = v.findViewById(R.id.crimeTitle);
@@ -164,6 +184,31 @@ public class CrimeFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable editable) {
 
+            }
+        });
+
+        PackageManager packageManager = getActivity().getPackageManager();
+
+        mCrimePhoto = v.findViewById(R.id.crime_photo);
+        mCameraButton = v.findViewById(R.id.crime_camera);
+        final Intent captureImage = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+
+        boolean CanTakePhoto = mPhotoFile != null && captureImage.resolveActivity(packageManager) != null;
+        mCameraButton.setEnabled(CanTakePhoto);
+
+        mCameraButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Uri uri=FileProvider.getUriForFile(getActivity(),"criminalintent.and.mazzy.criminalIntent.fileprovider",
+                        mPhotoFile);
+                captureImage.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+                List<ResolveInfo> cameraActivities = getActivity().getPackageManager().queryIntentActivities(captureImage, PackageManager.MATCH_DEFAULT_ONLY);
+
+                for (ResolveInfo cameraActivity : cameraActivities) {
+                    getActivity().grantUriPermission(getActivity().getPackageName(),uri,Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                    startActivityForResult(captureImage,REQUEST_PHOTO);
+                }
             }
         });
 
@@ -255,7 +300,7 @@ public class CrimeFragment extends Fragment {
             mSuspectButton.setText(mCrime.getSuspect());
         }
 
-        PackageManager packageManager = getActivity().getPackageManager();
+
         if (packageManager.resolveActivity(pickContact,
                 PackageManager.MATCH_DEFAULT_ONLY) == null) {
             mSuspectButton.setEnabled(false);
