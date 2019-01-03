@@ -1,7 +1,6 @@
 package criminalintent.and.mazzy.criminalintent;
 
 import android.app.Activity;
-import android.app.Instrumentation;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -17,12 +16,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.content.FileProvider;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.text.format.Time;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -34,16 +29,11 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.File;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
-
-import criminalintent.and.mazzy.criminalintent.page.CrimePageActivity;
-
-import static android.provider.LiveFolders.INTENT;
 
 public class CrimeFragment extends Fragment {
 
@@ -63,8 +53,8 @@ public class CrimeFragment extends Fragment {
     private Button mReportButton;
     private Button mCallSuspectButton;
 
-    private ImageView mCrimePhoto;
-    private ImageButton mCameraButton;
+    private ImageView mPhotoView;
+    private ImageButton mPhotoButton;
 
 
     private File mPhotoFile;
@@ -189,15 +179,15 @@ public class CrimeFragment extends Fragment {
 
         PackageManager packageManager = getActivity().getPackageManager();
 
-        mCrimePhoto = v.findViewById(R.id.crime_photo);
-        mCameraButton = v.findViewById(R.id.crime_camera);
+        mPhotoView = v.findViewById(R.id.crime_photo);
+        mPhotoButton = v.findViewById(R.id.crime_camera);
         final Intent captureImage = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
 
         boolean CanTakePhoto = mPhotoFile != null && captureImage.resolveActivity(packageManager) != null;
-        mCameraButton.setEnabled(CanTakePhoto);
+        mPhotoButton.setEnabled(CanTakePhoto);
 
-        mCameraButton.setOnClickListener(new View.OnClickListener(){
+        mPhotoButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
                 Uri uri=FileProvider.getUriForFile(getActivity(),"criminalintent.and.mazzy.criminalIntent.fileprovider",
@@ -207,11 +197,11 @@ public class CrimeFragment extends Fragment {
 
                 for (ResolveInfo cameraActivity : cameraActivities) {
                     getActivity().grantUriPermission(getActivity().getPackageName(),uri,Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                    startActivityForResult(captureImage,REQUEST_PHOTO);
                 }
+                startActivityForResult(captureImage,REQUEST_PHOTO);
             }
         });
-
+        mPhotoView=v.findViewById(R.id.crime_photo);
 
         mSuspectButton = v.findViewById(R.id.crime_suspect);
         mReportButton = v.findViewById(R.id.crime_report);
