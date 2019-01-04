@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -111,6 +112,13 @@ public class CrimeFragment extends Fragment {
             } finally {
                 c.close();
             }
+
+            if(requestCode==REQUEST_PHOTO){
+                Uri uri =FileProvider.getUriForFile(getActivity(),"criminalintent.and.mazzy.criminalintent.fileprovider",mPhotoFile);
+                getActivity().revokeUriPermission(uri,Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                updatePhotoView();
+
+            }
         }
 
     }
@@ -179,7 +187,9 @@ public class CrimeFragment extends Fragment {
 
         PackageManager packageManager = getActivity().getPackageManager();
 
-        mPhotoView = v.findViewById(R.id.crime_photo);
+
+
+
         mPhotoButton = v.findViewById(R.id.crime_camera);
         final Intent captureImage = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
@@ -190,8 +200,7 @@ public class CrimeFragment extends Fragment {
         mPhotoButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                Uri uri=FileProvider.getUriForFile(getActivity(),"criminalintent.and.mazzy.criminalIntent.fileprovider",
-                        mPhotoFile);
+                Uri uri=FileProvider.getUriForFile(getActivity(),"criminalintent.and.mazzy.criminalIntent.fileprovider", mPhotoFile);
                 captureImage.putExtra(MediaStore.EXTRA_OUTPUT, uri);
                 List<ResolveInfo> cameraActivities = getActivity().getPackageManager().queryIntentActivities(captureImage, PackageManager.MATCH_DEFAULT_ONLY);
 
@@ -202,6 +211,8 @@ public class CrimeFragment extends Fragment {
             }
         });
         mPhotoView=v.findViewById(R.id.crime_photo);
+        updatePhotoView();
+
 
         mSuspectButton = v.findViewById(R.id.crime_suspect);
         mReportButton = v.findViewById(R.id.crime_report);
@@ -383,4 +394,17 @@ public class CrimeFragment extends Fragment {
 
         return solvedString;
     }
+
+    private void updatePhotoView(){
+        if (mPhotoView == null || !mPhotoFile.exists()) {
+            mPhotoView.setImageDrawable(null);
+        }
+        else{
+            Bitmap bitmap=PictureUtils.getScaledBitmap(mPhotoFile.getPath(),getActivity());
+            mPhotoView.setImageBitmap(bitmap);
+        }
+    }
+
+
+
 }
