@@ -66,6 +66,11 @@ public class CrimeFragment extends Fragment {
 
     private CheckBox mSolvedCheckbox;
 
+
+    public interface Callbacks{
+        void onCrimeUpdated(Crime crime);
+    }
+
     @Override
     public void onPause() {
         super.onPause();

@@ -1,6 +1,7 @@
 package criminalintent.and.mazzy.criminalintent;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -9,8 +10,25 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 
-public abstract  class SingleFragmentActivity extends AppCompatActivity {
+import criminalintent.and.mazzy.criminalintent.page.CrimePageActivity;
+
+public abstract  class SingleFragmentActivity extends AppCompatActivity implements CrimeListFragment.Callbacks {
     protected abstract Fragment createFragment();
+
+    @Override
+    public void onCrimeSelected(Crime crime) {
+        if(findViewById(R.id.detail_fragment_container)==null){
+            Intent intent=CrimePageActivity.newIntent(this,crime.getid);
+            startActivity(intent);
+        }
+
+        else{
+            Fragment newDetail=CrimeFragment.getInstance(crime.getUid());
+            getSupportFragmentManager().beginTransaction().replace(R.id.detail_fragment_container,newDetail).commit();
+
+        }
+    }
+
 
     @LayoutRes
     protected int getLayoutResId() {

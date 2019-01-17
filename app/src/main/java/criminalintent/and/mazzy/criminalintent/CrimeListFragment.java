@@ -1,5 +1,6 @@
 package criminalintent.and.mazzy.criminalintent;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -39,7 +40,28 @@ public class CrimeListFragment extends Fragment {
     private boolean mSubtitleVisible;
     private List<Integer> changedList=new ArrayList<>();
 
+    public Callbacks mCallbacks;
 
+
+
+
+    public interface Callbacks{
+            void onCrimeSelected(Crime crime);
+        }
+
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mCallbacks=(Callbacks) context;
+    }
+
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mCallbacks=null;
+    }
 
     @Nullable
     @Override
@@ -122,8 +144,9 @@ public class CrimeListFragment extends Fragment {
     private void AddNewCrime() {
         Crime crime = new Crime();
         CrimeLab.getInstance(getActivity()).AddCrime(crime);
-        Intent intent = CrimePageActivity.newIntent(getActivity(), crime.getUid());
-        startActivity(intent);
+        UpdateUI();
+        mCallbacks.onCrimeSelected(crime);
+
     }
 
     private void updateSubtitle() {
@@ -141,7 +164,7 @@ public class CrimeListFragment extends Fragment {
     }
 
 
-    private void UpdateUI() {
+    public void UpdateUI() {
         if (mCrimeAdapter != null) {
             if (mCrimeAdapter.getItemCount() > 0) {
                 emptyView.setVisibility(View.GONE);
@@ -189,8 +212,6 @@ public class CrimeListFragment extends Fragment {
             mTitleTextView = itemView.findViewById(R.id.crime_title);
             mDateTextView = itemView.findViewById(R.id.crime_date);
             mSolvedImageView = itemView.findViewById(R.id.crime_solved);
-
-
         }
 
         public void bind(Crime crime) {
@@ -205,9 +226,7 @@ public class CrimeListFragment extends Fragment {
         public void onClick(View view) {
             changedList.add(getAdapterPosition());
             //Intent intent = CrimeActivity.newIntent(getActivity(),mCrime.getUid());
-            Intent intent = CrimePageActivity.newIntent(getActivity(), mCrime.getUid());
-
-            startActivity(intent);
+            mCallbacks.onCrimeSelected(mCrime);
         }
     }
 
