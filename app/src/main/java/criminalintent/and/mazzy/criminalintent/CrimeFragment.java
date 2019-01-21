@@ -1,6 +1,7 @@
 package criminalintent.and.mazzy.criminalintent;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -66,6 +67,20 @@ public class CrimeFragment extends Fragment {
 
     private CheckBox mSolvedCheckbox;
 
+    private Callbacks mCallbacks;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mCallbacks=(Callbacks)context;
+    }
+
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mCallbacks=null;
+    }
 
     public interface Callbacks{
         void onCrimeUpdated(Crime crime);

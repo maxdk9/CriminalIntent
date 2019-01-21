@@ -26,7 +26,7 @@ import criminalintent.and.mazzy.criminalintent.CrimeFragment;
 import criminalintent.and.mazzy.criminalintent.CrimeLab;
 import criminalintent.and.mazzy.criminalintent.R;
 
-public class CrimePageActivity extends AppCompatActivity implements View.OnClickListener {
+public class CrimePageActivity extends AppCompatActivity implements View.OnClickListener,CrimeFragment.Callbacks{
 
 
     public static final String EXTRA_CRIME_ID="criminalintent.and.mazzy.criminalintent.page";
@@ -132,5 +132,10 @@ public class CrimePageActivity extends AppCompatActivity implements View.OnClick
         if (mViewPager.getCurrentItem() == 0) {
             btnFirstCrime.setEnabled(false);
         }
+    }
+
+    @Override
+    public void onCrimeUpdated(Crime crime) {
+
     }
 }
