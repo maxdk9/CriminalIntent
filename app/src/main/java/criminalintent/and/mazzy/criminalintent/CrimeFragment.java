@@ -92,6 +92,13 @@ public class CrimeFragment extends Fragment {
         CrimeLab.getInstance(getActivity()).UpdateCrime(mCrime);
     }
 
+
+    private void updateCrime(){
+        CrimeLab.getInstance(getActivity()).UpdateCrime(mCrime);
+        mCallbacks.onCrimeUpdated(mCrime);
+    }
+
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode != Activity.RESULT_OK) {
@@ -106,6 +113,7 @@ public class CrimeFragment extends Fragment {
 
             update_mDate(date);
             update_Time(date);
+            updateCrime();
         }
 
         if (requestCode == REQUEST_CONTACT && data != null) {
@@ -129,6 +137,7 @@ public class CrimeFragment extends Fragment {
                 mCrime.setSuspect(suspect);
                 mCrime.setSuspectId(suspectid);
                 mSuspectButton.setText(suspect+";id="+suspectid);
+                updateCrime();
             } finally {
                 c.close();
             }
@@ -137,7 +146,7 @@ public class CrimeFragment extends Fragment {
                 Uri uri =FileProvider.getUriForFile(getActivity(),"criminalintent.and.mazzy.criminalintent.fileprovider",mPhotoFile);
                 getActivity().revokeUriPermission(uri,Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
                 updatePhotoView();
-
+                updateCrime();
             }
         }
 
@@ -196,6 +205,7 @@ public class CrimeFragment extends Fragment {
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 mCrime.setTitle(charSequence.toString());
                 CrimeLab.getInstance(getActivity()).AddChanged(mCrime.getUid());
+                updateCrime();
 
             }
 
@@ -278,6 +288,7 @@ public class CrimeFragment extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 mCrime.setSolved(b);
+                updateCrime();
             }
         });
 
