@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 
+import criminalintent.and.mazzy.criminalintent.model.Crime;
 import criminalintent.and.mazzy.criminalintent.page.CrimePageActivity;
 
 public abstract  class SingleFragmentActivity extends AppCompatActivity implements CrimeListFragment.Callbacks {

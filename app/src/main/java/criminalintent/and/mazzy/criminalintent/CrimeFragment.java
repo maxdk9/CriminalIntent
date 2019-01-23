@@ -37,6 +37,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
+import criminalintent.and.mazzy.criminalintent.model.Crime;
+import criminalintent.and.mazzy.criminalintent.model.CrimeLab;
+
 public class CrimeFragment extends Fragment {
 
     public static final String CRIME_ID = "crime_id";
@@ -204,7 +207,7 @@ public class CrimeFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 mCrime.setTitle(charSequence.toString());
-                CrimeLab.getInstance(getActivity()).AddChanged(mCrime.getUid());
+
                 updateCrime();
 
             }

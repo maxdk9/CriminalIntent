@@ -1,11 +1,15 @@
 package criminalintent.and.mazzy.criminalintent;
 
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 
-public class CrimeListActivity extends SingleFragmentActivity implements CrimeListFragment.Callbacks,CrimeFragment.Callbacks {
+import criminalintent.and.mazzy.criminalintent.model.Crime;
 
+public class CrimeListActivity extends SingleFragmentActivity implements CrimeListFragment.Callbacks , CrimeFragment.Callbacks {
 
+    @Override
+    public void onCrimeSelected(Crime crime) {
+        super.onCrimeSelected(crime);
+    }
 
     @Override
     protected Fragment createFragment() {
@@ -21,6 +25,7 @@ public class CrimeListActivity extends SingleFragmentActivity implements CrimeLi
     @Override
     public void onCrimeUpdated(Crime crime) {
         CrimeListFragment crimeListFragment=(CrimeListFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+
         crimeListFragment.UpdateUI();
     }
 }

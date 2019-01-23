@@ -1,10 +1,9 @@
-package criminalintent.and.mazzy.criminalintent;
+package criminalintent.and.mazzy.criminalintent.model;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.widget.EditText;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -120,6 +119,7 @@ public class CrimeLab {
 
 
     public void UpdateCrime(Crime crime) {
+        AddChanged(crime.getUid());
         String uuidString=crime.getUid().toString();
         ContentValues values = getContentValues(crime);
         mDatabase.update(CrimeDbSchema.NAME, values, CrimeDbSchema.CrimeTable.Cols.UUID + " = ?", new String[]{uuidString});

@@ -1,7 +1,6 @@
 package criminalintent.and.mazzy.criminalintent;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,21 +12,17 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.TextureView;
 import android.view.View;
-import android.view.ViewDebug;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
-import criminalintent.and.mazzy.criminalintent.page.CrimePageActivity;
+import criminalintent.and.mazzy.criminalintent.model.Crime;
+import criminalintent.and.mazzy.criminalintent.model.CrimeLab;
 
 public class CrimeListFragment extends Fragment {
     private static final String SAVED_SUBTITLE_VISIBLE = "SAVED_SUBTITLE_VISIBLE";
@@ -133,6 +128,7 @@ public class CrimeListFragment extends Fragment {
             case R.id.ic_show_subtitle:
                 mSubtitleVisible=!mSubtitleVisible;
                 getActivity().invalidateOptionsMenu();
+
                 updateSubtitle();
                 return true;
             default:
@@ -172,7 +168,6 @@ public class CrimeListFragment extends Fragment {
             else{
                 emptyView.setVisibility(View.VISIBLE);
             }
-
         }
 
 
@@ -226,6 +221,8 @@ public class CrimeListFragment extends Fragment {
         public void onClick(View view) {
             changedList.add(getAdapterPosition());
             //Intent intent = CrimeActivity.newIntent(getActivity(),mCrime.getUid());
+
+
             mCallbacks.onCrimeSelected(mCrime);
         }
     }

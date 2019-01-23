@@ -15,15 +15,14 @@ import android.view.View;
 import android.widget.Button;
 
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 
-import criminalintent.and.mazzy.criminalintent.Crime;
+import criminalintent.and.mazzy.criminalintent.model.Crime;
 
 import criminalintent.and.mazzy.criminalintent.CrimeFragment;
-import criminalintent.and.mazzy.criminalintent.CrimeLab;
+import criminalintent.and.mazzy.criminalintent.model.CrimeLab;
 import criminalintent.and.mazzy.criminalintent.R;
 
 public class CrimePageActivity extends AppCompatActivity implements View.OnClickListener,CrimeFragment.Callbacks{
@@ -136,6 +135,6 @@ public class CrimePageActivity extends AppCompatActivity implements View.OnClick
 
     @Override
     public void onCrimeUpdated(Crime crime) {
-
+        Log.d("OnCrimeUpdated","OnCrimeUpdated");
     }
 }

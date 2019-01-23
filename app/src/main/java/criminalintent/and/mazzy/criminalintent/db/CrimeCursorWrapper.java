@@ -6,7 +6,7 @@ import android.database.CursorWrapper;
 import java.util.Date;
 import java.util.UUID;
 
-import criminalintent.and.mazzy.criminalintent.Crime;
+import criminalintent.and.mazzy.criminalintent.model.Crime;
 
 public class CrimeCursorWrapper extends CursorWrapper {
 

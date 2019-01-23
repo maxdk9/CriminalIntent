@@ -1,4 +1,4 @@
-package criminalintent.and.mazzy.criminalintent;
+package criminalintent.and.mazzy.criminalintent.model;
 
 import android.text.format.DateFormat;
 
