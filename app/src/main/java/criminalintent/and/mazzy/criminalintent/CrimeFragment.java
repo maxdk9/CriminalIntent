@@ -16,6 +16,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.FileProvider;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -40,7 +41,7 @@ import java.util.UUID;
 import criminalintent.and.mazzy.criminalintent.model.Crime;
 import criminalintent.and.mazzy.criminalintent.model.CrimeLab;
 
-public class CrimeFragment extends Fragment {
+public class CrimeFragment extends Fragment  {
 
     public static final String CRIME_ID = "crime_id";
     public static final String DIALOG_DATE = "dialogdate";

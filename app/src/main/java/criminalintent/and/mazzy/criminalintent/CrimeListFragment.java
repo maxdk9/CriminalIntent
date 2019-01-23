@@ -8,10 +8,13 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -66,6 +69,29 @@ public class CrimeListFragment extends Fragment {
 
         mCrimeRecycleView = (RecyclerView) view.findViewById(R.id.crime_recycler_listview);
         mCrimeRecycleView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        mCrimeRecycleView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+            @Override
+            public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
+                return false;
+            }
+
+            @Override
+            public void onTouchEvent(RecyclerView rv, MotionEvent e) {
+                switch (e.getActionMasked()){
+                    case MotionEvent.ACTION_MOVE:
+                        Log.d("CrimeListFragment", "Action was MOVE");
+                        break;
+                }
+
+            }
+
+            @Override
+            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
+            }
+        });
+
         emptyView = view.findViewById(R.id.emty_view);
         addCrime_Button = view.findViewById(R.id.emty_view_addcrimebutton);
         addCrime_Button.setOnClickListener(new View.OnClickListener() {
@@ -161,13 +187,18 @@ public class CrimeListFragment extends Fragment {
 
 
     public void UpdateUI() {
+
+
+
         if (mCrimeAdapter != null) {
+
             if (mCrimeAdapter.getItemCount() > 0) {
                 emptyView.setVisibility(View.GONE);
             }
             else{
                 emptyView.setVisibility(View.VISIBLE);
             }
+            mCrimeAdapter.notifyDataSetChanged();
         }
 
 
@@ -178,8 +209,9 @@ public class CrimeListFragment extends Fragment {
             mCrimeRecycleView.setAdapter(mCrimeAdapter);
         }
         else{
-
-            updateChangedList();
+            mCrimeAdapter.mCrimeList=crimes;
+            mCrimeAdapter.notifyDataSetChanged();
+            //updateChangedList();
 
         }
 
@@ -228,7 +260,7 @@ public class CrimeListFragment extends Fragment {
     }
 
 
-    public class CrimeAdapter extends RecyclerView.Adapter<CrimeHolder> {
+    public class CrimeAdapter extends RecyclerView.Adapter<CrimeHolder>  {
 
         private List<Crime> mCrimeList;
         private List<Integer> changedList;
@@ -258,6 +290,7 @@ public class CrimeListFragment extends Fragment {
         public void onBindViewHolder(@NonNull CrimeHolder holder, int position) {
             Crime crime = mCrimeList.get(position);
             holder.bind(crime);
+
         }
 
         @Override
