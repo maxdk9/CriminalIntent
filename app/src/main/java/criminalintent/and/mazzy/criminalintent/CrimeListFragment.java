@@ -2,6 +2,7 @@ package criminalintent.and.mazzy.criminalintent;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Debug;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -20,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,6 +63,24 @@ public class CrimeListFragment extends Fragment {
         mCallbacks=null;
     }
 
+    ItemTouchHelper recycleViewRemoveHelper=new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(ItemTouchHelper.LEFT,ItemTouchHelper.RIGHT){
+
+
+        public  boolean onMove(RecyclerView recyclerView,
+                               RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+            final int fromPos = viewHolder.getAdapterPosition();
+            final int toPos = target.getAdapterPosition();
+            // move item in `fromPos` to `toPos` in adapter.
+            Log.i("ItemTouchHelper","Moved");
+            return true;// true if moved, false otherwise
+        }
+        public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+            Log.i("ItemTouchHelper","SWIPED");
+            Toast.makeText(getActivity(),"Item swiped",Toast.LENGTH_SHORT).show();
+        }
+    });
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -69,28 +89,8 @@ public class CrimeListFragment extends Fragment {
 
         mCrimeRecycleView = (RecyclerView) view.findViewById(R.id.crime_recycler_listview);
         mCrimeRecycleView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recycleViewRemoveHelper.attachToRecyclerView(mCrimeRecycleView);
 
-        mCrimeRecycleView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
-            @Override
-            public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
-                return false;
-            }
-
-            @Override
-            public void onTouchEvent(RecyclerView rv, MotionEvent e) {
-                switch (e.getActionMasked()){
-                    case MotionEvent.ACTION_MOVE:
-                        Log.d("CrimeListFragment", "Action was MOVE");
-                        break;
-                }
-
-            }
-
-            @Override
-            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
-            }
-        });
 
         emptyView = view.findViewById(R.id.emty_view);
         addCrime_Button = view.findViewById(R.id.emty_view_addcrimebutton);
